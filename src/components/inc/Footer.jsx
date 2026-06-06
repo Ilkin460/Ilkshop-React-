@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router';
 
 function Footer() {
-  // Görseldeki 5 sütunlu şehir listesi verisi
   const cityColumns = [
     ["San Francisco", "Miami", "San Diego", "East Bay", "Long Beach"],
     ["Los Angeles", "Washington DC", "Seattle", "Portland", "Nashville"],
@@ -15,7 +14,6 @@ function Footer() {
     <footer className="w-full bg-[#212121] text-[#9E9E9E] pt-16 pb-12 font-sans">
       <div className="max-w-360 mx-auto px-4 sm:px-12">
         
-        {/* ÜST BÖLÜM: OUR TOP CITIES */}
         <div>
           <h3 className="text-white font-bold text-sm tracking-wider uppercase mb-8">
             Our Top Cities
@@ -38,13 +36,10 @@ function Footer() {
           </div>
         </div>
 
-        {/* AYRAÇ ÇİZGİSİ */}
         <hr className="border-[#424242] my-12" />
 
-        {/* ALT BÖLÜM: ŞİRKET BİLGİLERİ VE FOLLLOW / SUBSCRIBE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 text-sm">
           
-          {/* SÜTUN 1: COMPANY */}
           <div className="lg:col-span-2 flex flex-col gap-3">
             <h4 className="text-white font-bold tracking-wider uppercase mb-2">Company</h4>
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">About Us</Link>
@@ -53,7 +48,6 @@ function Footer() {
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">blog</Link>
           </div>
 
-          {/* SÜTUN 2: CONTACT */}
           <div className="lg:col-span-2 flex flex-col gap-3">
             <h4 className="text-white font-bold tracking-wider uppercase mb-2">Contact</h4>
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">Help & Support</Link>
@@ -62,7 +56,6 @@ function Footer() {
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">Ride with us</Link>
           </div>
 
-          {/* SÜTUN 3: LEGAL 1 */}
           <div className="lg:col-span-2 flex flex-col gap-3">
             <h4 className="text-white font-bold tracking-wider uppercase mb-2">Legal</h4>
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">Terms & Conditions</Link>
@@ -71,7 +64,6 @@ function Footer() {
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">Cookie Policy</Link>
           </div>
 
-          {/* SÜTUN 4: LEGAL 2 */}
           <div className="lg:col-span-2 flex flex-col gap-3">
             <h4 className="text-white font-bold tracking-wider uppercase mb-2">Legal</h4>
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">Terms & Conditions</Link>
@@ -79,10 +71,8 @@ function Footer() {
             <Link to="#" className="hover:text-amber-500 transition shadow-sm">Privacy Policy</Link>
           </div>
 
-          {/* SÜTUN 5: FOLLOW US & SUBSCRIBE BOX (Sağdaki büyük alan) */}
           <div className="lg:col-span-4 flex flex-col gap-4 lg:pl-4">
             
-            {/* SOSYAL MEDYA İKONLARI */}
             <div>
               <h4 className="text-white font-bold tracking-wider uppercase mb-3">Follow Us</h4>
               <div className="flex items-center gap-4 text-white">
@@ -104,14 +94,12 @@ function Footer() {
               </div>
             </div>
 
-            {/* BÜLTEN ABONELİK BAŞLIĞI */}
             <div className="mt-2">
               <p className="text-white font-bold text-base leading-snug max-w-sm">
                 Receive exclusive offers and discounts in your mailbox
               </p>
             </div>
 
-            {/* ABONELİK FORMU (Görseldeki gibi entegre butonlu ve gri zeminli) */}
             <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row items-center gap-3 mt-1 w-full max-w-md">
               <div className="relative w-full flex-1">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
