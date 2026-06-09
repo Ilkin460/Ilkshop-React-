@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ilk Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream:    '#f4f1eb',
+                        surface:  '#ffffff',
+                        surface2: '#f0ece3',
+                        border:   '#e0d9cc',
+                        accent:   '#2d6a4f',
+                        accent2:  '#52b788',
+                        muted:    '#888888',
+                    },
+                    fontFamily: {
+                        display: ['"Playfair Display"', 'serif'],
+                        sans:    ['"DM Sans"', 'sans-serif'],
+                    },
+                    keyframes: {
+                        fadeUp:  { from: { opacity:'0', transform:'translateY(24px)' }, to: { opacity:'1', transform:'translateY(0)' } },
+                        slideUp: { from: { opacity:'0', transform:'translateY(30px)' }, to: { opacity:'1', transform:'translateY(0)' } },
+                        pulse2:  { '0%,100%': { opacity:'1' }, '50%': { opacity:'0.5' } },
+                    },
+                    animation: {
+                        fadeUp:  'fadeUp 0.5s ease both',
+                        slideUp: 'slideUp 0.3s ease',
+                        pulse2:  'pulse2 1.5s infinite',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .gizle { display: none; }
+        .goster { display: flex; }
+        html, body { overflow-x: hidden; max-width: 100%; }
+        .cat-btn { transition: all 0.2s; }
+        .cat-btn.active { background: #2d6a4f; color: white; border-color: #2d6a4f; }
+
+        /* Dropdown axtarış siyahısı */
+        #srclist {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 512px;
+            background: #fff;
+            border: 1px solid #e0d9cc;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+            z-index: 500;
+            max-height: 360px;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        #srclist .src-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        #srclist .src-item:hover { background: #f0ece3; }
+        #srclist .src-item img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f4f1eb;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        #srclist .src-item .src-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+        #srclist .src-item .src-price {
+            font-size: 12px;
+            color: #2d6a4f;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        #srclist .src-empty {
+            padding: 18px;
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body class="bg-cream text-gray-900 font-sans min-h-screen" style="padding-top: 68px;">
+
+<!-- HEADER -->
+<header style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background:rgba(244,241,235,0.92); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);" class="w-full border-b border-border">
+    <div class="container mx-auto flex items-center justify-between px-4 sm:px-8 h-[68px]">
+        <div>
+            <div class="font-display text-2xl font-black tracking-tight" style="background:linear-gradient(135deg,#2d6a4f,#52b788);-webkit-background-clip:text;-webkit-text-fill-color:transparent">
+                Ilk Shop
+            </div>
+            <div class="text-[11px] font-light tracking-widest uppercase text-muted -mt-1">Premium Collection</div>
+        </div>
+        <button onclick="sebetiAc()" class="flex items-center gap-2.5 bg-surface2 border border-border text-gray-900 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 hover:border-accent hover:text-accent">
+            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+            </svg>
+            Səbət
+            <span id="say" class="bg-accent text-white rounded-full w-5 h-5 flex items-center justify-center text-[11px] font-bold transition-transform duration-200">0</span>
+        </button>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="relative text-center px-4 sm:px-8 pt-20 pb-8">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[600px] h-[300px] pointer-events-none overflow-hidden"
+        style="background:radial-gradient(ellipse at center,rgba(45,106,79,0.12) 0%,transparent 70%)"></div>
+    <h2 class="font-display font-black leading-tight tracking-tight mb-4" style="font-size:clamp(2.5rem,6vw,4.5rem)">
+        New Season,<br>
+        <em class="font-display italic" style="background:linear-gradient(135deg,#2d6a4f,#52b788);-webkit-background-clip:text;-webkit-text-fill-color:transparent">New Cart.</em>
+    </h2>
+    <p class="text-muted text-sm tracking-[0.05em] uppercase">Seçilmiş premium məhsul kolleksiyası</p>
+</section>
+
+<!-- SEARCH BOX -->
+<div class="px-4 sm:px-8 pb-6 max-w-[1400px] mx-auto">
+    <div class="relative w-full max-w-lg mx-auto">
+        <input type="text" id="searchInput" placeholder="Məhsul adı ilə axtar..."
+            autocomplete="off"
+            class="w-full px-5 py-3 bg-surface border border-border rounded-full focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all text-gray-800 text-sm font-medium shadow-sm"
+            oninput="searchData(this.value)"/>
+        <div class="absolute right-4 top-3.5 text-muted pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
+        <!-- DROPDOWN AXTARIŞ SİYAHISI -->
+        <div id="srclist"></div>
+    </div>
+</div>
+
+<!-- CATEGORY FILTER -->
+<div class="px-4 sm:px-8 pb-6 max-w-[1400px] mx-auto">
+    <ul id="categoryList" class="flex flex-wrap gap-2">
+        <li>
+            <button onclick="filtrData('all', this)" class="cat-btn active border border-border bg-surface2 text-gray-800 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest hover:border-accent hover:text-accent">
+                Hamısı
+            </button>
+        </li>
+    </ul>
+</div>
+
+<!-- PRODUCTS -->
+<div id="mehsullar" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 sm:px-8 pb-16 max-w-[1400px] mx-auto"></div>
+
+<!-- MODAL -->
+<div id="modal" class="gizle fixed inset-0 z-[200] justify-center items-center"
+    style="background:rgba(50,40,30,0.55);backdrop-filter:blur(8px)"
+    onclick="modalDis(event)">
+    <div class="bg-surface border border-border w-full max-w-[460px] mx-4 rounded-2xl overflow-hidden animate-slideUp">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-border">
+            <h2 class="font-display text-xl font-bold">Sizin Səbətiniz</h2>
+            <button onclick="bagla()" class="w-8 h-8 rounded-full border border-border text-muted flex items-center justify-center text-base transition-all duration-200 hover:border-red-400 hover:text-red-400">✕</button>
+        </div>
+        <div id="siyahi" class="max-h-[360px] overflow-y-auto px-6 py-2"></div>
+        <div class="flex items-center justify-between px-6 py-5 border-t border-border">
+            <div>
+                <div class="text-[11px] text-muted uppercase tracking-widest">Ümumi məbləğ</div>
+                <div class="font-display text-2xl font-bold text-accent"><span id="umumi">0</span> AZN</div>
+            </div>
+            <button class="bg-accent text-white px-6 py-2.5 rounded-xl font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-accent2 hover:scale-[1.03]">Sifariş et →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mehsullarArray = []
+    let sebet = []
+
+    // Dropdown-u bağla: xaricdə klik olduqda
+    document.addEventListener('click', function(e) {
+        const srclist = document.getElementById('srclist')
+        const searchInput = document.getElementById('searchInput')
+        if (!srclist.contains(e.target) && e.target !== searchInput) {
+            srclist.style.display = 'none'
+        }
+    })
+
+    // Skeleton loader
+    function skeletonGoster() {
+        document.getElementById('mehsullar').innerHTML = Array(8).fill(`
+            <div class="bg-surface border border-border rounded-2xl overflow-hidden animate-pulse2">
+                <div class="h-[220px] bg-[#e8e2d8]"></div>
+                <div class="p-5 space-y-3">
+                    <div class="h-3 bg-[#e8e2d8] rounded-full"></div>
+                    <div class="h-3 bg-[#e8e2d8] rounded-full w-3/5"></div>
+                    <div class="h-5 bg-[#e8e2d8] rounded-full w-2/5"></div>
+                </div>
+            </div>
+        `).join('')
+    }
+
+    // Kateqoriyaları API-dan gətir
+    function getCategory() {
+        fetch('https://69c575978a5b6e2dec2c85a6.mockapi.io/product/category')
+            .then(res => res.json())
+            .then(cats => {
+                const list = document.getElementById('categoryList')
+                cats.forEach(cat => {
+                    const li = document.createElement('li')
+                    li.innerHTML = `
+                        <button onclick="filtrData('${cat.name}', this)"
+                            class="cat-btn border border-border bg-surface2 text-gray-800 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest hover:border-accent hover:text-accent">
+                            ${cat.name}
+                        </button>
+                    `
+                    list.appendChild(li)
+                })
+            })
+    }
+
+    // Məhsulları API-dan gətir
+    function sayt() {
+        skeletonGoster()
+        fetch('https://69c575978a5b6e2dec2c85a6.mockapi.io/product/product')
+            .then(res => res.json())
+            .then(data => {
+                mehsullarArray = data
+                ekranaDuz(data)
+            })
+        getCategory()
+    }
+
+    function ekranaDuz(data) {
+        const el = document.getElementById('mehsullar')
+        if (!data.length) {
+            el.innerHTML = `<div class="col-span-full text-center py-12 text-muted text-sm">Məhsul tapılmadı.</div>`
+            return
+        }
+        el.innerHTML = data.map((item, i) => `
+            <div class="bg-surface border border-border rounded-2xl overflow-hidden flex flex-col animate-fadeUp group transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:border-[#c5bfb2]"
+                style="animation-delay:${i * 0.05}s">
+                <div class="relative bg-white h-[220px] flex items-center justify-center p-6 overflow-hidden">
+                    <span class="absolute top-3 left-3 bg-white/90 text-[#777] text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border border-border backdrop-blur">${item.category}</span>
+                    <img src="${item.image}" alt="${item.title}" loading="lazy"
+                        class="h-[160px] w-full object-contain transition-transform duration-300 group-hover:scale-[1.08]"/>
+                </div>
+                <div class="p-5 flex flex-col flex-1 gap-2">
+                    <p class="text-sm font-medium leading-snug line-clamp-2">${item.title}</p>
+                    <div class="mt-auto pt-1">
+                        <div class="font-display text-xl font-bold text-accent mb-3">${item.price} AZN</div>
+                        <button onclick="sebetAdd(${item.id})"
+                            class="w-full border border-border text-gray-800 py-2.5 rounded-xl text-xs font-medium uppercase tracking-widest transition-all duration-200 hover:bg-accent hover:border-accent hover:text-white mb-2">
+                            Səbətə at
+                        </button>
+                        <a href="detail.htm?s=${slugCreate(item.title)}"
+                            class="w-full block text-center border border-accent text-accent py-2.5 rounded-xl text-xs font-medium uppercase tracking-widest transition-all duration-200 hover:bg-accent hover:text-white">
+                            Daha ətraflı →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `).join('')
+    }
+
+    // Dropdown siyahısını render et (App.js-dən alındı, dizayna uyğunlaşdırıldı)
+    function srclistData(data) {
+        const srclist = document.getElementById('srclist')
+        if (!data.length) {
+            srclist.innerHTML = `<div class="src-empty">Nəticə tapılmadı.</div>`
+            return
+        }
+        srclist.innerHTML = data.map(s => `
+            <div class="src-item" onclick="getDetail('${slugCreate(s.title)}')">
+                <img src="${s.image}" alt="${s.title}"/>
+                <div>
+                    <div class="src-title">${s.title}</div>
+                    <div class="src-price">${s.price} AZN</div>
+                </div>
+            </div>
+        `).join('')
+    }
+
+    function searchData(value) {
+        const srclist = document.getElementById('srclist')
+        const keyword = value.toLowerCase().trim()
+
+        if (!keyword) {
+            srclist.style.display = 'none'
+            return
+        }
+
+        const dropdownFiltr = mehsullarArray.filter(item => item.title.toLowerCase().startsWith(keyword))
+        srclistData(dropdownFiltr)
+        srclist.style.display = 'block'
+    }
+
+    function filtrData(name, btn) {
+        // Search input-u sıfırla
+        const si = document.getElementById('searchInput')
+        const srclist = document.getElementById('srclist')
+        if (si) si.value = ''
+        if (srclist) srclist.style.display = 'none'
+
+        // Active class idarəsi
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'))
+        if (btn) btn.classList.add('active')
+        else document.querySelector('.cat-btn').classList.add('active')
+
+        const netice = (name === 'all') ? mehsullarArray : mehsullarArray.filter(f => f.category === name)
+        ekranaDuz(netice)
+    }
+
+    // Slug yaratma funksiyası (App.js-dən)
+    function slugCreate(title) {
+        return title
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+    }
+
+    // Məhsul detail səhifəsinə keç
+    function getDetail(slug) {
+        window.location.href = `detail.htm?s=${slug}`
+    }
+
+    function sebetAdd(id) {
+        const tapilan = mehsullarArray.find(x => x.id == id)
+        const mov = sebet.find(x => x.id == id)
+        if (mov) { mov.sayi++ } else { sebet.push({...tapilan, sayi: 1}) }
+        sebetiYenile()
+        const badge = document.getElementById('say')
+        badge.style.transform = 'scale(1.4)'
+        setTimeout(() => badge.style.transform = '', 200)
+    }
+
+    function azalt(id) {
+        const idx = sebet.findIndex(x => x.id == id)
+        if (idx !== -1) {
+            sebet[idx].sayi--
+            if (sebet[idx].sayi < 1) sebet.splice(idx, 1)
+        }
+        sebetiYenile()
+    }
+
+    function artir(id) {
+        const m = sebet.find(x => x.id == id)
+        if (m) m.sayi++
+        sebetiYenile()
+    }
+
+    function sebetiYenile() {
+        const siyahi = document.getElementById('siyahi')
+        const say    = document.getElementById('say')
+        const umumi  = document.getElementById('umumi')
+
+        if (sebet.length === 0) {
+            bagla()
+            say.innerText = 0
+            siyahi.innerHTML = ''
+            return
+        }
+
+        let cemi = 0, obsi = 0
+        siyahi.innerHTML = sebet.map(item => {
+            obsi += item.price * item.sayi
+            cemi += item.sayi
+            return `
+                <div class="flex items-center justify-between py-3.5 border-b border-border gap-4 last:border-b-0">
+                    <div class="w-[52px] h-[52px] bg-white rounded-xl flex items-center justify-center p-1.5 shrink-0">
+                        <img src="${item.image}" class="w-full h-full object-contain"/>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-medium truncate">${item.title}</p>
+                        <p class="text-sm font-semibold text-accent mt-0.5">${(item.price * item.sayi).toFixed(2)} AZN</p>
+                    </div>
+                    <div class="flex items-center border border-border rounded-lg overflow-hidden shrink-0">
+                        <button onclick="azalt(${item.id})" class="w-8 h-8 bg-surface2 text-gray-700 hover:bg-border transition-colors text-base">−</button>
+                        <span class="w-8 text-center text-sm font-bold">${item.sayi}</span>
+                        <button onclick="artir(${item.id})" class="w-8 h-8 bg-surface2 text-gray-700 hover:bg-border transition-colors text-base">+</button>
+                    </div>
+                </div>
+            `
+        }).join('')
+        say.innerText = cemi
+        umumi.innerText = obsi.toFixed(2)
+    }
+
+    function sebetiAc() {
+        if (sebet.length === 0) {
+            document.getElementById('siyahi').innerHTML = `
+                <div class="text-center py-10 text-muted">
+                    <svg viewBox="0 0 24 24" class="w-14 h-14 mx-auto mb-3" fill="none" stroke="#ccc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    <p class="text-base font-medium text-[#aaa]">Səbət boşdur</p>
+                    <p class="text-xs mt-1.5">Məhsul əlavə etmək üçün mağazaya qayıdın</p>
+                </div>
+            `
+            document.getElementById('umumi').innerText = '0.00'
+        }
+        modal.classList.replace('gizle', 'goster')
+    }
+
+    function bagla() { modal.classList.replace('goster', 'gizle') }
+    function modalDis(e) { if (e.target === modal) bagla() }
+
+    sayt()
+</script>
+<script src="app.js"></script>
+</body>
+</html>
