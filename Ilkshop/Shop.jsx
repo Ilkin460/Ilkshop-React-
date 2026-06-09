@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import apiService from './api'; 
+import apiService from './Api'; 
 
 function Shop() {
     // API States
